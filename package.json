@@ -7,6 +7,9 @@
     "build": "tsup src/index.ts --format esm",
     "create-anvil": "./dist/index.mjs"
   },
+  "bin": {
+    "create-anvil": "./dist/index.mjs"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
