@@ -2,6 +2,7 @@ export const addons = {
   styling: [
     { name: 'Tailwind CSS', value: 'tailwind', requires: [] },
     { name: 'Shadcn UI', value: 'shadcn', requires: ['tailwind', 'typescript'] },
+    { name: 'DaisyUI', value: 'daisyui', requires: ['tailwind'] },
   ],
   backend: [
     { name: 'Express', value: 'express', requires: [] },

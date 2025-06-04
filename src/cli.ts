@@ -52,6 +52,9 @@ export async function cli() {
     if (a.value === 'shadcn') {
       return selectedAddons.includes('tailwind') && selectedFramework.includes('ts');
     }
+    if (a.value === 'daisyui') {
+      return selectedAddons.includes('tailwind');
+    }
     return a.value !== 'tailwind'; // Already added separately
   });
 
