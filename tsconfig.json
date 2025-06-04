@@ -4,6 +4,7 @@
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "outDir": "dist",
+    "typeRoots": ["./node_modules/@types", "./src/types"],
     "esModuleInterop": true,
     "strict": true,
     "skipLibCheck": true
