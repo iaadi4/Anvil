@@ -4,50 +4,58 @@ import { addons } from './constants/addons';
 import { generateProject } from './generator';
 import chalk from 'chalk';
 
-export async function cli() {
-  intro(chalk.blue('✨ Create Your Web Stack'));
+const prefix = {
+  input: chalk.cyanBright('[INPUT]'),
+  info: chalk.blueBright('[INFO]'),
+  step: chalk.yellowBright('[STEP]'),
+  done: chalk.green('[DONE]'),
+  warn: chalk.hex('#FFA500')('[WARN]'),
+};
 
-  // Ask for project name
+export async function cli() {
+  intro(chalk.bold.blue('Create Web Stack CLI'));
+
+  console.log(`${prefix.input} Please enter a name for your project directory.\n`);
+
   const projectDir = await text({
-    message: 'What should be the name of the project directory?',
+    message: 'Project directory name:',
     placeholder: 'my-app',
-    validate: (input) => input.trim() === '' ? 'Directory name cannot be empty.' : undefined,
+    validate: input => input.trim() === '' ? 'Project directory name is required.' : undefined,
   });
 
   if (isCancel(projectDir)) {
-    outro('Cancelled.');
+    outro(`${prefix.warn} Operation cancelled.`);
     process.exit(0);
   }
 
+  console.log(`\n${prefix.input} Select a framework:\n`);
+
   const selectedFramework = await select({
-    message: 'Choose a framework:',
+    message: 'Framework:',
     options: frameworks.map(f => ({ label: f.name, value: f.value })),
   });
 
   if (isCancel(selectedFramework)) {
-    outro('Cancelled.');
+    outro(`${prefix.warn} Operation cancelled.`);
     process.exit(0);
   }
 
   const isReact = selectedFramework.startsWith('react');
   let selectedAddons: string[] = [];
 
-  // Tailwind?
   if (isReact) {
     const tailwind = await select({
-      message: 'Do you want Tailwind CSS?',
+      message: 'Include Tailwind CSS?',
       options: [
         { label: 'Yes', value: 'tailwind' },
         { label: 'No', value: null },
       ],
     });
-
-    if (typeof tailwind === 'string') selectedAddons.push(tailwind);
+    if (tailwind) selectedAddons.push(tailwind as string);
   } else {
-    selectedAddons.push('tailwind'); // Next comes with Tailwind
+    selectedAddons.push('tailwind'); // Default for Next.js
   }
 
-  // Styling options
   const styleChoices = addons.styling.filter(a => {
     if (a.value === 'shadcn') {
       return selectedAddons.includes('tailwind') && selectedFramework.includes('ts');
@@ -55,7 +63,7 @@ export async function cli() {
     if (a.value === 'daisyui') {
       return selectedAddons.includes('tailwind');
     }
-    return a.value !== 'tailwind'; // Already added separately
+    return a.value !== 'tailwind';
   });
 
   const style = await select({
@@ -65,34 +73,28 @@ export async function cli() {
       { label: 'None', value: null },
     ],
   });
+  if (style) selectedAddons.push(style as string);
 
-  if (typeof style === 'string') selectedAddons.push(style);
-
-  // Backend (React only)
   if (isReact) {
     const backend = await select({
-      message: 'Do you want a backend?',
+      message: 'Include backend support (Express)?',
       options: [
-        { label: 'Express', value: 'express' },
-        { label: 'None', value: null },
+        { label: 'Yes', value: 'express' },
+        { label: 'No', value: null },
       ],
     });
-
-    if (typeof backend === 'string') selectedAddons.push(backend);
+    if (backend) selectedAddons.push(backend as string);
   }
 
-  // Database
   const db = await select({
-    message: 'Choose a database:',
+    message: 'Select a database:',
     options: [
       ...addons.database.map(d => ({ label: d.name, value: d.value })),
       { label: 'None', value: null },
     ],
   });
+  if (db) selectedAddons.push(db as string);
 
-  if (typeof db === 'string') selectedAddons.push(db);
-
-  // Auth
   const auth = await select({
     message: 'Choose an auth provider:',
     options: [
@@ -100,30 +102,26 @@ export async function cli() {
       { label: 'None', value: null },
     ],
   });
+  if (auth) selectedAddons.push(auth as string);
 
-  if (typeof auth === 'string') selectedAddons.push(auth);
-
-  // Extras
   const extras = await multiselect({
-    message: 'Pick extras:',
+    message: 'Select additional tools:',
     options: [
       ...addons.extras.map(e => ({ label: e.name, value: e.value })),
       { label: 'None', value: null },
     ],
   });
-
   if (!isCancel(extras)) {
     selectedAddons.push(...(extras.filter(e => typeof e === 'string') as string[]));
   }
 
-  // Done!
-  console.log('');
-  console.log(chalk.green('Project Name:'), projectDir);
-  console.log(chalk.green('Framework:'), selectedFramework);
-  console.log(chalk.green('Addons:'), selectedAddons.join(', ') || 'None');
+  console.log('\n' + chalk.bold(`${prefix.info} Stack Summary:`));
+  console.log(`${prefix.info} Project    :`, chalk.white(projectDir));
+  console.log(`${prefix.info} Framework  :`, chalk.white(selectedFramework));
+  console.log(`${prefix.info} Addons     :`, selectedAddons.length ? chalk.white(selectedAddons.join(', ')) : chalk.gray('None'));
   console.log('');
 
   await generateProject(selectedFramework, selectedAddons, projectDir);
 
-  outro(chalk.cyan('🚀 Your stack is ready!'));
+  outro(`${prefix.done} Project successfully created at ./${projectDir}`);
 }
