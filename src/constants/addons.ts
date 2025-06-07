@@ -15,7 +15,6 @@ export const addons = {
     { name: 'BetterAuth', value: 'better-auth', requires: ['orm'] },
   ],
   extras: [
-    { name: 'ESLint + Prettier', value: 'eslint-prettier', requires: [] },
     { name: 'Docker', value: 'docker', requires: [] },
   ]
 };

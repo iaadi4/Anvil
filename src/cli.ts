@@ -85,43 +85,42 @@ export async function cli() {
     });
     if (style) selectedAddons.push(style as string);
 
-    if (isReact) {
-      const backend = await select({
-        message: "Include backend support (Express)?",
+    const backend = await select({
+      message: "Include backend support (Express)?",
+      options: [
+        { label: "Yes", value: "express" },
+        { label: "No", value: null },
+      ],
+    });
+    if (backend) selectedAddons.push(backend as string);
+
+    let selectedOrm: string | null = null;
+
+    const orm = await select({
+      message: "Select a ORM:",
+      options: [
+        ...addons.orm.map((d) => ({ label: d.name, value: d.value })),
+        { label: "None", value: null },
+      ],
+    });
+
+    if (orm === "prisma") {
+      selectedAddons.push("prisma");
+      const ormChoice = await select({
+        message: "Choose a database for Prisma:",
         options: [
-          { label: "Yes", value: "express" },
-          { label: "No", value: null },
+          { label: "PostgreSQL", value: "postgresql" },
+          { label: "MySQL", value: "mysql" },
+          { label: "SQLite", value: "sqlite" },
         ],
       });
-      if (backend) selectedAddons.push(backend as string);
 
-      let selectedOrm: string | null = null;
-
-      const orm = await select({
-        message: "Select a ORM:",
-        options: [
-          ...addons.orm.map((d) => ({ label: d.name, value: d.value })),
-          { label: "None", value: null },
-        ],
-      });
-      if (orm === "prisma") {
-        selectedAddons.push("prisma");
-        const ormChoice = await select({
-          message: "Choose a database for Prisma:",
-          options: [
-            { label: "PostgreSQL", value: "postgresql" },
-            { label: "MySQL", value: "mysql" },
-            { label: "SQLite", value: "sqlite" },
-          ],
-        });
-
-        if (isCancel(ormChoice)) {
-          console.log("Operation cancelled.");
-          process.exit(0);
-        }
-
-        selectedOrm = ormChoice;
+      if (isCancel(ormChoice)) {
+        console.log("Operation cancelled.");
+        process.exit(0);
       }
+
+      selectedOrm = ormChoice;
 
       const extras = await multiselect({
         message: "Select additional tools:",
@@ -130,6 +129,7 @@ export async function cli() {
           { label: "None", value: null },
         ],
       });
+
       if (!isCancel(extras)) {
         selectedAddons.push(
           ...(extras.filter((e) => typeof e === "string") as string[])
