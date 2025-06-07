@@ -7,12 +7,12 @@ export const addons = {
   backend: [
     { name: 'Express', value: 'express', requires: [] },
   ],
-  database: [
+  orm: [
     { name: 'Prisma', value: 'prisma', requires: ['backend'] },
   ],
   auth: [
-    { name: 'NextAuth', value: 'next-auth', requires: ['database'] },
-    { name: 'BetterAuth', value: 'better-auth', requires: ['database'] },
+    { name: 'NextAuth', value: 'next-auth', requires: ['orm'] },
+    { name: 'BetterAuth', value: 'better-auth', requires: ['orm'] },
   ],
   extras: [
     { name: 'ESLint + Prettier', value: 'eslint-prettier', requires: [] },
