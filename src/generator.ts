@@ -25,6 +25,7 @@ function delay(ms: number) {
 }
 
 export async function generateProject(
+    frameworkName: string,
     framework: string,
     addons: string[],
     projectDir: string,
@@ -63,7 +64,7 @@ export async function generateProject(
     }
 
     for (const addon of addons) {
-        const addonPath = findAddonPath(addon);
+        const addonPath = findAddonPath(addon, frameworkName);
         if (!addonPath) {
             console.warn(`${prefix.warn} Skipping unknown addon: ${addon}`);
             continue;
@@ -173,8 +174,8 @@ export async function generateProject(
     console.log(`\n${prefix.success} Project setup completed successfully.`);
 }
 
-function findAddonPath(addonName: string): string | null {
-    const groups = ['styling', 'backend', 'database', 'auth', 'extras'];
+function findAddonPath(addonName: string, frameworkName: string): string | null {
+    const groups = [`styling/${frameworkName}`, 'backend', 'orm', 'auth', 'extras'];
     for (const group of groups) {
         const possible = path.join(
             __dirname,

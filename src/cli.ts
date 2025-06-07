@@ -150,7 +150,9 @@ export async function cli() {
       );
       console.log("");
 
+      const frameworkName = selectedFramework.split("-")[0];
       await generateProject(
+        frameworkName,
         selectedFramework,
         selectedAddons,
         projectDir,
