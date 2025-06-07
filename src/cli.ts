@@ -86,6 +86,8 @@ export async function cli() {
     if (backend) selectedAddons.push(backend as string);
   }
 
+  let selectedDb: string | null = null;
+
   const db = await select({
     message: 'Select a database:',
     options: [
@@ -93,16 +95,35 @@ export async function cli() {
       { label: 'None', value: null },
     ],
   });
-  if (db) selectedAddons.push(db as string);
+  if (db === 'prisma') {
+    selectedAddons.push('prisma');
+    const dbChoice = await select({
+      message: 'Choose a database for Prisma:',
+      options: [
+        { label: 'PostgreSQL', value: 'postgresql' },
+        { label: 'MySQL', value: 'mysql' },
+        { label: 'SQLite', value: 'sqlite' },
+      ],
+    });
 
-  const auth = await select({
-    message: 'Choose an auth provider:',
-    options: [
-      ...addons.auth.map(a => ({ label: a.name, value: a.value })),
-      { label: 'None', value: null },
-    ],
-  });
-  if (auth) selectedAddons.push(auth as string);
+    if (isCancel(dbChoice)) {
+      console.log('Operation cancelled.');
+      process.exit(0);
+    }
+
+    selectedDb = dbChoice;
+  }
+
+  if (!isReact) {
+    const auth = await select({
+      message: 'Choose an auth provider:',
+      options: [
+        ...addons.auth.map(a => ({ label: a.name, value: a.value })),
+        { label: 'None', value: null },
+      ],
+    });
+    if (auth) selectedAddons.push(auth as string);
+  }
 
   const extras = await multiselect({
     message: 'Select additional tools:',
@@ -121,7 +142,7 @@ export async function cli() {
   console.log(`${prefix.info} Addons     :`, selectedAddons.length ? chalk.white(selectedAddons.join(', ')) : chalk.gray('None'));
   console.log('');
 
-  await generateProject(selectedFramework, selectedAddons, projectDir);
+  await generateProject(selectedFramework, selectedAddons, projectDir, selectedDb ?? undefined);
 
   outro(`${prefix.done} Project successfully created at ./${projectDir}`);
 }
