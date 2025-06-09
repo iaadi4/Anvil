@@ -175,7 +175,7 @@ export async function generateProject(
 }
 
 function findAddonPath(addonName: string, frameworkName: string): string | null {
-    const groups = [`styling/${frameworkName}`, 'backend', 'orm', 'auth', 'extras'];
+    const groups = [`styling/${frameworkName}`, 'backend', 'orm', 'auth', 'extras', 'packageManager'];
     for (const group of groups) {
         const possible = path.join(
             __dirname,

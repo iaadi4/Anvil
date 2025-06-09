@@ -16,5 +16,10 @@ export const addons = {
   ],
   extras: [
     { name: 'Docker', value: 'docker', requires: [] },
+  ],
+  packageManager: [
+    { name: 'npm', value: 'npm', requires: [] }, 
+    { name: 'yarn', value: 'yarn', requires: [] },
+    { name: 'pnpm', value: 'pnpm', requires: [] }
   ]
 };

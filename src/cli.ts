@@ -162,6 +162,25 @@ export async function cli() {
   }
 
   if (!isReact) {
+    let selectedAddons: string[] = [];
+
+    const packageManager = await select({
+      message: "Choose a package manager:",
+      options: [
+        ...addons.packageManager.map((pm) => ({
+          label: pm.name,
+          value: pm.value
+        }))
+      ]
+    });
+
+    if(isCancel(packageManager)) {
+      outro(`${prefix.warn} Operation cancelled.`);
+      process.exit(0);
+    }
+
+    if(packageManager) selectedAddons.push(packageManager as string);
+
     const auth = await select({
       message: "Choose an auth provider:",
       options: [
@@ -170,6 +189,15 @@ export async function cli() {
       ],
     });
     if (auth) selectedAddons.push(auth as string);
+
+    const frameworkName = selectedFramework.split("-")[0];
+    await generateProject(
+        frameworkName,
+        selectedFramework,
+        selectedAddons,
+        projectDir,
+        undefined
+      );
   }
 
   outro(`${prefix.done} Project successfully created at ./${projectDir}`);
