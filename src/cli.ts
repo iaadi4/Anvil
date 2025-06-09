@@ -190,6 +190,18 @@ export async function cli() {
     });
     if (auth) selectedAddons.push(auth as string);
 
+
+    const style = await select({
+      message: "Choose a styling library:",
+      options: [
+        { label: 'daisyui', value: 'daisyui' },
+        { label: 'shadcn', value: 'shadcn' },
+        { label: 'nextui', value: 'nextui' },
+        { label: 'none', value: null }
+      ],
+    });
+    if (style) selectedAddons.push(style as string);
+
     const frameworkName = selectedFramework.split("-")[0];
     await generateProject(
         frameworkName,
