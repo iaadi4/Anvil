@@ -181,16 +181,6 @@ export async function cli() {
 
     if(packageManager) selectedAddons.push(packageManager as string);
 
-    const auth = await select({
-      message: "Choose an auth provider:",
-      options: [
-        ...addons.auth.map((a) => ({ label: a.name, value: a.value })),
-        { label: "None", value: null },
-      ],
-    });
-    if (auth) selectedAddons.push(auth as string);
-
-
     const style = await select({
       message: "Choose a styling library:",
       options: [
@@ -201,6 +191,15 @@ export async function cli() {
       ],
     });
     if (style) selectedAddons.push(style as string);
+
+    // const auth = await select({
+    //   message: "Choose an auth provider:",
+    //   options: [
+    //     ...addons.auth.map((a) => ({ label: a.name, value: a.value })),
+    //     { label: "None", value: null },
+    //   ],
+    // });
+    // if (auth) selectedAddons.push(auth as string);
 
     const frameworkName = selectedFramework.split("-")[0];
     await generateProject(
