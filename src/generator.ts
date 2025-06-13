@@ -111,7 +111,7 @@ export async function generateProject(
                         const incoming = await fs.readFile(file, 'utf-8');
                         const merged = original + '\n' + incoming;
                         await fs.writeFile(destPath, merged);
-                        console.log(`${prefix.info} Merged .env.example`);
+                        console.log(`${prefix.info} Merged .env`);
                     } else {
                         console.warn(
                             `${prefix.warn} Skipping unsupported file type: ${relPath}`

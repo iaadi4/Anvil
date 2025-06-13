@@ -188,7 +188,29 @@ export async function cli() {
         { label: 'none', value: null }
       ],
     });
+
+    if(isCancel(style)) {
+      outro(`${prefix.warn} Operation cancelled.`);
+      process.exit(0);
+    }
+
     if (style) selectedAddons.push(style as string);
+
+    const orm = await select({
+      message: "Choose an ORM:",
+      options: [
+        { label: 'Prisma', value: 'prisma' },
+        { label: 'drizzle', value: 'drizzle' },
+        { label: 'none', value: null }
+      ],
+    });
+
+    if(isCancel(orm)) {
+      outro(`${prefix.warn} Operation cancelled.`);
+      process.exit(0);
+    }
+
+    if (orm) selectedAddons.push(orm as string);
 
     // const auth = await select({
     //   message: "Choose an auth provider:",

@@ -10,6 +10,6 @@ generator client {
 }
 
 datasource db {
-  provider = "{{provider}}"
+  provider = "postgresql" // select your databse -> [mongodb, postgresql, sqlite, mysql, cockroachdb, sqlserver]
   url      = env("DATABASE_URL")
 }
