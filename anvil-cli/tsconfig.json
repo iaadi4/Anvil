@@ -4,10 +4,10 @@
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "outDir": "dist",
-    "typeRoots": ["./node_modules/@types", "./src/types"],
+    "typeRoots": ["./node_modules/@types", "anvil-cli/src/types"],
     "esModuleInterop": true,
     "strict": true,
     "skipLibCheck": true
   },
-  "include": ["src"]
+  "include": ["anvil-cli/src"]
 }
