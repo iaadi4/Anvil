@@ -179,8 +179,6 @@ export async function cli() {
       process.exit(0);
     }
 
-    if(packageManager) selectedAddons.push(packageManager as string);
-
     const style = await select({
       message: "Choose a styling library:",
       options: [
