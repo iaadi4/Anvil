@@ -2,8 +2,8 @@
 
 import React, { useEffect, useRef, useState } from "react";
 
-const VIDEO_PATH = "/videos/bg-video.mp4";
-const VIDEO_DURATION = 54; // seconds
+const VIDEO_PATH = "/videos/background.mp4";
+const VIDEO_DURATION = 20; // seconds
 const FADE_DURATION = 5; // seconds
 
 const Background = () => {
