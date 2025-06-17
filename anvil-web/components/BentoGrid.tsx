@@ -4,21 +4,30 @@ import MergeAnimation from "./MergeAnimation";
 import AuthIconGlow from "./AuthGlowIcon";
 import TerminalTyping from "./TerminalTyping";
 import ReadmeManifestAnimation from "./ReadmeAnimation";
+import RevealY from "./RevealY";
 
 export default function BentoGrid() {
   return (
-    <div className="min-h-screen bg-black py-10 md:py-16 lg:py-20 font-neue-montreal px-4 md:px-6 lg:px-8">
+    <div className="min-h-screen bg-black py-10 md:py-16 lg:py-20 font-neue-montreal px-4 md:px-6 lg:px-8 mb-12 sm:mb-16 lg:mb-20">
       <div className="w-full mx-auto flex flex-col items-center justify-center">
-        <h1 className="text-4xl md:text-5xl lg:text-6xl max-w-xs sm:max-w-md md:max-w-2xl lg:max-w-3xl font-medium text-center text-white mb-8 md:mb-12 lg:mb-20 leading-tight">
-          The{" "}
-          <span className="bg-gradient-to-t from-[#ff4c24] to-[#ffe1d6] bg-clip-text text-transparent">
-            tool
-          </span>{" "}
-          we wish we had, so we built it for you
-        </h1>
+        <RevealY delay={0.2}>
+          <h2 className="text-4xl overflow-hidden md:text-5xl lg:text-6xl max-w-xs sm:max-w-md md:max-w-2xl lg:max-w-3xl font-medium text-center text-white leading-tight">
+            The{" "}
+            <span className="bg-gradient-to-t from-[#ff4c24] to-[#ffe1d6] bg-clip-text text-transparent">
+              tool
+            </span>{" "}
+            we wish we had,
+          </h2>
+        </RevealY>
+
+        <RevealY delay={0.3}>
+          <h2 className="text-4xl overflow-hidden md:text-5xl lg:text-6xl max-w-xs sm:max-w-md md:max-w-2xl lg:max-w-3xl font-medium text-center text-white leading-tight">
+            so we built it for you
+          </h2>
+        </RevealY>
 
         {/* Stacked Layout - for small and medium screens */}
-        <div className="flex flex-col gap-4 w-full max-w-sm sm:max-w-md md:max-w-2xl mx-auto lg:hidden">
+        <div className="flex flex-col gap-4 w-full max-w-sm sm:max-w-md md:max-w-2xl mx-auto lg:hidden mt-8 mt:mb-12 lg:mt-20">
           {/* Modular Stack Building */}
           <div className="relative bg-zinc-900 rounded-2xl shadow-lg overflow-hidden flex flex-col justify-end px-6 py-8 h-[25rem]">
             <div className="absolute inset-0 z-0">
@@ -108,7 +117,7 @@ export default function BentoGrid() {
         </div>
 
         {/* Desktop Layout - Original 5x2 Grid */}
-        <div className="hidden lg:grid grid-cols-5 grid-rows-2 gap-4 h-[50rem] xl:h-[60rem] w-full max-w-7xl mx-auto">
+        <div className="hidden lg:grid grid-cols-5 grid-rows-2 gap-4 h-[50rem] xl:h-[60rem] w-full max-w-7xl mx-auto mt-8 md:mt-12 lg:mt-20">
           {/* Grid Item 1 - Top Left (Square) */}
           <div className="relative bg-zinc-900 rounded-2xl shadow-lg overflow-hidden flex flex-col col-span-2 row-span-1 justify-end px-6 py-10">
             <div className="absolute inset-0 z-0">

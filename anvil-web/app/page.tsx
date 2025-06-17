@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import React, { Suspense } from "react";
 import Loading from "./loading";
 import BentoGrid from "@/components/BentoGrid";
+import LogosSection from "@/components/LogosSection";
 
 const Home = () => {
   return (
@@ -18,6 +19,7 @@ const Home = () => {
         <HeroContent />
       </div>
       <BentoGrid />
+      <LogosSection />
     </>
   );
 };

@@ -3,8 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
 
-const rawReadme = `
-# My Awesome Project
+const rawReadme = `# My Awesome Project
 
 ## Tech Stack
 - React 18 with TypeScript
@@ -24,7 +23,7 @@ const rawReadme = `
 
 ## Installation
 \`\`\`bash
-git clone https://github.com/username/your-project.git
+git clone https://github.com/username/projectname.git
 cd my-awesome-project
 npm install
 \`\`\`

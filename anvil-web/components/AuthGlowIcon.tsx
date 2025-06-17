@@ -126,7 +126,7 @@ const AuthIconGlow = () => {
       {/* Glow circle */}
       {hovered && (
         <motion.div
-          className="absolute top-[30%] left-[25%] sm:left-[37%] sm:top-[18%] rounded-full bg-[#FF4C24] opacity-40 blur-2xl"
+          className="absolute top-[30%] left-[25%] sm:left-[37%] sm:top-[18%] lg:left-[17%] lg:top-[22%] rounded-full bg-[#FF4C24] opacity-40 blur-2xl"
           style={{
             width:
               screenSize === "sm"
