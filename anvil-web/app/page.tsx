@@ -1,11 +1,12 @@
 import Background from "@/components/Background";
 import HeroContent from "@/components/HeroContent";
-import Logo from "@/components/Logo";
 import Navbar from "@/components/Navbar";
 import React, { Suspense } from "react";
 import Loading from "./loading";
 import BentoGrid from "@/components/BentoGrid";
 import LogosSection from "@/components/LogosSection";
+import GitHubSection from "@/components/GithubSection";
+import Footer from "@/components/Footer";
 
 const Home = () => {
   return (
@@ -20,6 +21,8 @@ const Home = () => {
       </div>
       <BentoGrid />
       <LogosSection />
+      <GitHubSection />
+      <Footer />
     </>
   );
 };

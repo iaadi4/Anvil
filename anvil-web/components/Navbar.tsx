@@ -7,6 +7,7 @@ import AnimatedButton from "./AnimatedButton";
 import { Menu, X } from "lucide-react";
 import { AnimatePresence, motion, Variants } from "motion/react";
 import RevealY from "./RevealY";
+import { VscGithubInverted } from "react-icons/vsc";
 
 const dropdownVariants: Variants = {
   hidden: { opacity: 0, scaleY: 0, transformOrigin: "top" },
@@ -78,8 +79,9 @@ const Navbar: React.FC = () => {
 
         {/* CTA Button (Desktop only) */}
         <RevealY>
-          <AnimatedButton className="bg-white px-8 hidden md:block py-3 text-black rounded w-full sm:w-auto font-medium">
-            Get started
+          <AnimatedButton className="bg-white px-8 hidden md:flex md:gap-3 md:items-center py-3 text-black rounded w-full sm:w-auto font-medium">
+            <VscGithubInverted className="text-black" size={20} />
+            Github
           </AnimatedButton>
         </RevealY>
       </div>
@@ -99,8 +101,9 @@ const Navbar: React.FC = () => {
             <AnimatedText>About</AnimatedText>
             <AnimatedText>Services</AnimatedText>
             <AnimatedText>Contact</AnimatedText>
-            <AnimatedButton className="bg-white px-8 py-3 text-black rounded w-full sm:w-auto">
-              Get started
+            <AnimatedButton className="bg-white px-8 py-3 flex gap-3 items-center text-black rounded w-full sm:w-auto">
+              <VscGithubInverted className="text-black" size={20} />
+              Github
             </AnimatedButton>
           </motion.div>
         )}

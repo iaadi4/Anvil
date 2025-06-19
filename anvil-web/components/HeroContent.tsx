@@ -1,7 +1,7 @@
 import React from "react";
-import { VscGithubInverted } from "react-icons/vsc";
 import AnimatedButton from "./AnimatedButton";
 import RevealY from "./RevealY";
+import CommandBtn from "./CommandBtn";
 
 const HeroContent = () => {
   return (
@@ -59,10 +59,7 @@ const HeroContent = () => {
               </AnimatedButton>
             </RevealY>
             <RevealY delay={0.5}>
-              <AnimatedButton className="bg-glass px-6 py-3 text-white rounded flex gap-3 items-center w-full sm:w-auto">
-                <VscGithubInverted className="text-white" size={20} />
-                Github
-              </AnimatedButton>
+              <CommandBtn />
             </RevealY>
           </div>
 
