@@ -10,7 +10,7 @@ export default function BentoGrid() {
   return (
     <div className="min-h-screen bg-black py-10 md:py-16 lg:py-20 font-neue-montreal px-4 md:px-6 lg:px-8 mb-12 sm:mb-16 lg:mb-20">
       <div className="w-full mx-auto flex flex-col items-center justify-center">
-        <RevealY delay={0.2}>
+        <RevealY delay={0.1}>
           <h2 className="text-4xl overflow-hidden md:text-5xl lg:text-6xl max-w-xs sm:max-w-md md:max-w-2xl lg:max-w-3xl font-medium text-center text-white leading-tight">
             The{" "}
             <span className="bg-gradient-to-t from-[#ff4c24] to-[#ffe1d6] bg-clip-text text-transparent">
@@ -20,7 +20,7 @@ export default function BentoGrid() {
           </h2>
         </RevealY>
 
-        <RevealY delay={0.3}>
+        <RevealY delay={0.2}>
           <h2 className="text-4xl overflow-hidden md:text-5xl lg:text-6xl max-w-xs sm:max-w-md md:max-w-2xl lg:max-w-3xl font-medium text-center text-white leading-tight">
             so we built it for you
           </h2>

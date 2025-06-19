@@ -21,7 +21,7 @@ const HeroContent = () => {
           <div className="flex flex-col gap-1 text-sm xl:text-base">
             {["Express", "Prisma", "Firebase", "and more ..."].map(
               (tool, i) => (
-                <RevealY key={tool} delay={(i + 5) * 0.1}>
+                <RevealY key={tool} delay={i * 0.1}>
                   <div
                     className={tool === "and more ..." ? "text-[#ff8d74]" : ""}
                   >
@@ -53,18 +53,18 @@ const HeroContent = () => {
 
           {/* Buttons */}
           <div className="flex flex-col sm:flex-row gap-6 mt-10">
-            <RevealY delay={0.4}>
+            <RevealY delay={0.3}>
               <AnimatedButton className="bg-white px-6 py-3 text-black rounded w-full sm:w-auto">
                 Get started
               </AnimatedButton>
             </RevealY>
-            <RevealY delay={0.5}>
+            <RevealY delay={0.4}>
               <CommandBtn />
             </RevealY>
           </div>
 
           {/* Paragraph */}
-          <RevealY delay={0.6}>
+          <RevealY delay={0.5}>
             <p className="text-sm lg:text-md text-white mt-20 max-w-2xl font-neue-montreal font-medium">
               Anvil is a modular stack generator for modern web projects —
               create fully configured architectures with React, Next.js,

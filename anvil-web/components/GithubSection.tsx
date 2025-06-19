@@ -40,13 +40,13 @@ const GitHubSection = () => {
         </motion.div>
       </motion.div>
 
-      <RevealY delay={0.2}>
+      <RevealY delay={0.1}>
         <h2 className="text-3xl sm:text-4xl overflow-hidden font-medium ">
           Free & <span className="bg-gradient-to-t from-[#ff4c24] to-[#ffe1d6] bg-clip-text text-transparent">Open Source</span>
         </h2>
       </RevealY>
 
-      <RevealY delay={0.3}>
+      <RevealY delay={0.2}>
         <p className="text-zinc-500 overflow-hidden text-md font-medium max-w-xl">
           Anvil is MIT licensed and always will be free and open source.
           <br />
@@ -59,7 +59,7 @@ const GitHubSection = () => {
         target="_blank"
         rel="noopener noreferrer"
       >
-        <RevealY delay={0.4}>
+        <RevealY delay={0.3}>
           <AnimatedButton className="bg-white px-6 py-3 text-black rounded-lg flex gap-4 items-center w-full sm:w-auto mt-10">
             <VscGithubInverted className="text-black" size={20} />
             GitHub

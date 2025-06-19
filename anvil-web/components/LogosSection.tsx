@@ -119,7 +119,7 @@ const LogosSection = () => {
   return (
     <div className="min-h-screen w-screen my-12 sm:my-16 lg:my-20 flex flex-col gap-10">
       <div className="w-full h-fit font-neue-montreal flex flex-col items-center text-4xl md:text-5xl lg:text-6xl font-medium text-center text-white leading-tight">
-        <RevealY delay={0.2}>
+        <RevealY delay={0.1}>
           <h2 className="overflow-hidden">
             <span className="bg-gradient-to-t from-[#ff4c24] to-[#ffe1d6] bg-clip-text text-transparent">
               Everything
@@ -127,7 +127,7 @@ const LogosSection = () => {
             you need.
           </h2>
         </RevealY>
-        <RevealY delay={0.3}>
+        <RevealY delay={0.2}>
           <h2 className="overflow-hidden">Nothing you don't.</h2>
         </RevealY>
       </div>

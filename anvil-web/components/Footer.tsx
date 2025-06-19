@@ -36,19 +36,21 @@ const Footer = () => {
   });
 
   return (
-    <div className="w-full h-fit font-neue-montreal items-center flex flex-col overflow-hidden">
-      <div className="h-[1px] w-[80%] bg-gradient-to-r from-transparent via-zinc-800 to-transparent"></div>
+    <div className="w-full h-fit font-neue-montreal flex flex-col overflow-hidden">
+      <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-zinc-800 to-transparent"></div>
 
-      <div className="max-w-7xl mx-auto px-6 py-20 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 relative">
+      <div className="px-20 py-20 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 relative">
         {footerLinks("Sitemap", sitemapLinks)}
         {footerLinks("Company", companyLinks)}
-        {footerLinks("Contact", contactLinks)}
+        {footerLinks("Help", contactLinks)}
 
         <div className="space-y-4">
-          <h4 className="text-[10px] tracking-widest text-zinc-500 uppercase">
-            Contact us
-          </h4>
-          <form className="flex flex-wrap gap-4">
+          <RevealY delay={0.1}>
+            <h4 className="text-[10px] tracking-widest text-zinc-500 uppercase">
+              Contact us
+            </h4>
+          </RevealY>
+          <form className="flex flex-col gap-4">
             <AnimatedInput type="text" placeholder="First name" />
             <AnimatedInput type="email" placeholder="john.doe@anvil.dev" />
           </form>
