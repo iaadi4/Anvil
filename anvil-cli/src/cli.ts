@@ -85,6 +85,15 @@ export async function cli() {
     });
     if (style) selectedAddons.push(style as string);
 
+    const auth = await select({
+      message: "Choose an auth provider:",
+      options: [
+        { label: "Clerk", value: "clerk" },
+        { label: "None", value: null },
+      ],
+    });
+    if (auth) selectedAddons.push(auth as string);
+
     const extras = await multiselect({
       message: "Select additional tools:",
       options: [

@@ -18,13 +18,6 @@ export async function mergeCssFiles(targetFile: string, addonFile: string) {
   if (!addonExists) return;
   let addonCss = await fs.readFile(addonFile, 'utf8');
 
-  // Check for override directive
-  if (/^\s*\/\*override\*\//.test(addonCss)) {
-    addonCss = addonCss.replace(/^\s*\/\*override\*\/\s*/, '');
-    await fs.writeFile(targetFile, addonCss, 'utf8');
-    return;
-  }
-
   if (!targetExists) {
     await fs.copy(addonFile, targetFile);
     return;

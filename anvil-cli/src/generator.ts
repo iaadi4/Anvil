@@ -72,7 +72,15 @@ export async function generateProject(
                     await fs.copy(file, destPath);
                     console.log(`${prefix.info} New file added: ${relPath}`);
                 } else {
-                    if (file.endsWith('vite.config.ts')) {
+                    let fileContent = await fs.readFile(file, 'utf-8');
+
+                    // Check for override directive
+                    if (/^\s*\/\*override\*\//.test(fileContent)) {
+                        fileContent = fileContent.replace(/^\s*\/\*override\*\/\s*/, '');
+                        await fs.writeFile(destPath, fileContent, 'utf8');
+                    } 
+                    
+                    else if (file.endsWith('vite.config.ts')) {
                         await mergeViteConfigs(destPath, file);
                         console.log(`${prefix.info} Merged Vite config: ${relPath}`);
                     } else if (file.endsWith('.css')) {
@@ -112,7 +120,7 @@ export async function generateProject(
 }
 
 function findAddonPath(addonName: string, frameworkName: string): string | null {
-    const groups = [`styling/${frameworkName}`, 'orm', 'auth', 'extras', 'packageManager'];
+    const groups = [`styling/${frameworkName}`, 'orm', `auth/${frameworkName}`, 'extras', 'packageManager'];
     for (const group of groups) {
         const possible = path.join(
             __dirname,
