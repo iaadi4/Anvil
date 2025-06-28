@@ -7,6 +7,7 @@ import fs from 'fs-extra';
  * - @import statements go at the very top
  * - @plugin statements go after @import
  * - All other rules go to the bottom
+ * - If addon file starts with /*override*\/, it replaces the target file
  */
 export async function mergeCssFiles(targetFile: string, addonFile: string) {
   const [targetExists, addonExists] = await Promise.all([
@@ -15,15 +16,21 @@ export async function mergeCssFiles(targetFile: string, addonFile: string) {
   ]);
 
   if (!addonExists) return;
+  let addonCss = await fs.readFile(addonFile, 'utf8');
+
+  // Check for override directive
+  if (/^\s*\/\*override\*\//.test(addonCss)) {
+    addonCss = addonCss.replace(/^\s*\/\*override\*\/\s*/, '');
+    await fs.writeFile(targetFile, addonCss, 'utf8');
+    return;
+  }
+
   if (!targetExists) {
     await fs.copy(addonFile, targetFile);
     return;
   }
 
-  const [targetCss, addonCss] = await Promise.all([
-    fs.readFile(targetFile, 'utf8'),
-    fs.readFile(addonFile, 'utf8'),
-  ]);
+  const targetCss = await fs.readFile(targetFile, 'utf8');
 
   const targetRoot = safeParse(targetCss);
   const addonRoot = safeParse(addonCss);
@@ -101,6 +108,6 @@ export async function mergeCssFiles(targetFile: string, addonFile: string) {
   // Add other rules from addon
   otherNodes.forEach(node => finalRoot.append(node));
 
-  const result = finalRoot.toString(); // this respects all `raws.*` set above
+  const result = finalRoot.toString();
   await fs.writeFile(targetFile, result, 'utf8');
 }
