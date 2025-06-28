@@ -32,28 +32,17 @@ export async function generateProject(
     dbType?: string
 ) {
     const outputPath = path.join(process.cwd(), projectDir);
-    const hasExpress = addons.includes('express');
-    const isReact = framework.startsWith('react');
-    const usingClientServerStructure = isReact && hasExpress;
-
-    const clientPath = usingClientServerStructure
-        ? path.join(outputPath, 'client')
-        : outputPath;
-    const serverPath = usingClientServerStructure
-        ? path.join(outputPath, 'server')
-        : null;
-
     const frameworkPath = path.join(TEMPLATE_DIR, 'frameworks', framework);
 
     const spinner = ora(`Creating project at ${projectDir}...`).start();
     try {
         await fs.ensureDir(outputPath);
-        await fs.copy(frameworkPath, clientPath);
+        await fs.copy(frameworkPath, outputPath);
         await delay(300);
         spinner.succeed(
             `${prefix.success} Framework scaffolded to ${path.relative(
                 process.cwd(),
-                clientPath
+                outputPath
             )}`
         );
         console.log('\n');
@@ -70,24 +59,13 @@ export async function generateProject(
             continue;
         }
 
-        const isBackend = addon === 'express';
-
-        const targetPath =
-            addon === 'prisma'
-                ? isReact && hasExpress && serverPath
-                    ? path.join(serverPath)
-                    : path.join(clientPath)
-                : isBackend && serverPath
-                    ? serverPath
-                    : clientPath;
-
         const addonSpinner = ora(`Integrating addon: ${addon} \n`).start();
         try {
             const files = await getAllFiles(addonPath);
 
             for (const file of files) {
                 const relPath = path.relative(addonPath, file);
-                const destPath = path.join(targetPath, relPath);
+                const destPath = path.join(outputPath, relPath);
 
                 if (!fs.existsSync(destPath)) {
                     await fs.ensureDir(path.dirname(destPath));
@@ -120,47 +98,6 @@ export async function generateProject(
                 }
             }
 
-            // Prisma special handling
-            if (addon === 'prisma' && dbType) {
-                const envPath = path.join(outputPath, 'server', '.env.example');
-                const schemaPath = path.join(targetPath, 'prisma', 'schema.prisma');
-
-                const provider = dbType;
-                const connectionString = {
-                    postgresql: 'postgresql://user:password@localhost:5432/dbname',
-                    mysql: 'mysql://user:password@localhost:3306/dbname',
-                    sqlite: 'file:./dev.db',
-                }[dbType];
-
-                if (await fs.pathExists(schemaPath)) {
-                    let schema = await fs.readFile(schemaPath, 'utf-8');
-
-                    const updated = schema.replace(
-                        /provider = ["']\{\{provider\}\}["']/,
-                        `provider = "${provider}"`
-                    );
-
-                    if (updated !== schema) {
-                        await fs.writeFile(schemaPath, updated);
-                        console.log(`${prefix.info} Updated Prisma provider to ${provider}`);
-                    } else {
-                        console.warn(`${prefix.warn} No provider placeholder found in schema.prisma`);
-                    }
-                }
-
-                let env = '';
-                if (await fs.pathExists(envPath)) {
-                    env = await fs.readFile(envPath, 'utf-8');
-                }
-
-                // Replace any existing DATABASE_URL line, or add it if missing
-                const updatedEnv = env.match(/^DATABASE_URL=.*$/m)
-                    ? env.replace(/^DATABASE_URL=.*$/m, `DATABASE_URL="${connectionString}"`)
-                    : env + `\nDATABASE_URL="${connectionString}"\n`;
-
-                await fs.writeFile(envPath, updatedEnv);
-            }
-
             await delay(300);
             addonSpinner.succeed(`${prefix.success} Addon '${addon}' integrated.`);
             console.log('\n');
@@ -175,7 +112,7 @@ export async function generateProject(
 }
 
 function findAddonPath(addonName: string, frameworkName: string): string | null {
-    const groups = [`styling/${frameworkName}`, 'backend', 'orm', 'auth', 'extras', 'packageManager'];
+    const groups = [`styling/${frameworkName}`, 'orm', 'auth', 'extras', 'packageManager'];
     for (const group of groups) {
         const possible = path.join(
             __dirname,

@@ -85,80 +85,41 @@ export async function cli() {
     });
     if (style) selectedAddons.push(style as string);
 
-    const backend = await select({
-      message: "Include backend support (Express)?",
+    const extras = await multiselect({
+      message: "Select additional tools:",
       options: [
-        { label: "Yes", value: "express" },
-        { label: "No", value: null },
-      ],
-    });
-    if (backend) selectedAddons.push(backend as string);
-
-    let selectedOrm: string | null = null;
-
-    const orm = await select({
-      message: "Select a ORM:",
-      options: [
-        ...addons.orm.map((d) => ({ label: d.name, value: d.value })),
+        ...addons.extras.map((e) => ({ label: e.name, value: e.value })),
         { label: "None", value: null },
       ],
     });
 
-    if (orm === "prisma") {
-      selectedAddons.push("prisma");
-      const ormChoice = await select({
-        message: "Choose a database for Prisma:",
-        options: [
-          { label: "PostgreSQL", value: "postgresql" },
-          { label: "MySQL", value: "mysql" },
-          { label: "SQLite", value: "sqlite" },
-        ],
-      });
-
-      if (isCancel(ormChoice)) {
-        console.log("Operation cancelled.");
-        process.exit(0);
-      }
-
-      selectedOrm = ormChoice;
-
-      const extras = await multiselect({
-        message: "Select additional tools:",
-        options: [
-          ...addons.extras.map((e) => ({ label: e.name, value: e.value })),
-          { label: "None", value: null },
-        ],
-      });
-
-      if (!isCancel(extras)) {
-        selectedAddons.push(
-          ...(extras.filter((e) => typeof e === "string") as string[])
-        );
-      }
-
-      console.log("\n" + chalk.bold(`${prefix.info} Stack Summary:`));
-      console.log(`${prefix.info} Project    :`, chalk.white(projectDir));
-      console.log(
-        `${prefix.info} Framework  :`,
-        chalk.white(selectedFramework)
-      );
-      console.log(
-        `${prefix.info} Addons     :`,
-        selectedAddons.length
-          ? chalk.white(selectedAddons.join(", "))
-          : chalk.gray("None")
-      );
-      console.log("");
-
-      const frameworkName = selectedFramework.split("-")[0];
-      await generateProject(
-        frameworkName,
-        selectedFramework,
-        selectedAddons,
-        projectDir,
-        selectedOrm ?? undefined
+    if (!isCancel(extras)) {
+      selectedAddons.push(
+        ...(extras.filter((e) => typeof e === "string") as string[])
       );
     }
+
+    console.log("\n" + chalk.bold(`${prefix.info} Stack Summary:`));
+    console.log(`${prefix.info} Project    :`, chalk.white(projectDir));
+    console.log(
+      `${prefix.info} Framework  :`,
+      chalk.white(selectedFramework)
+    );
+    console.log(
+      `${prefix.info} Addons     :`,
+      selectedAddons.length
+        ? chalk.white(selectedAddons.join(", "))
+        : chalk.gray("None")
+    );
+    console.log("");
+
+    const frameworkName = selectedFramework.split("-")[0];
+    await generateProject(
+      frameworkName,
+      selectedFramework,
+      selectedAddons,
+      projectDir
+    );
   }
 
   if (!isReact) {
