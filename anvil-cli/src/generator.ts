@@ -92,7 +92,7 @@ export async function generateProject(
                     } else if (file.endsWith('.json')) {
                         await mergeJsonFiles(destPath, file);
                         console.log(`${prefix.info} Merged JSON file: ${relPath}`);
-                    } else if (file.endsWith('.env.example')) {
+                    } else if (file.endsWith('.env')) {
                         const original = await fs.readFile(destPath, 'utf-8');
                         const incoming = await fs.readFile(file, 'utf-8');
                         const merged = original + '\n' + incoming;
@@ -120,7 +120,7 @@ export async function generateProject(
 }
 
 function findAddonPath(addonName: string, frameworkName: string): string | null {
-    const groups = [`styling/${frameworkName}`, 'orm', `auth/${frameworkName}`, 'extras', 'packageManager'];
+    const groups = [`styling/${frameworkName}`, `orm/${frameworkName}`, `auth/${frameworkName}`, 'extras', 'packageManager'];
     for (const group of groups) {
         const possible = path.join(
             __dirname,

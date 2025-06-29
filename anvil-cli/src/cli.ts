@@ -182,14 +182,14 @@ export async function cli() {
 
     if (orm) selectedAddons.push(orm as string);
 
-    // const auth = await select({
-    //   message: "Choose an auth provider:",
-    //   options: [
-    //     ...addons.auth.map((a) => ({ label: a.name, value: a.value })),
-    //     { label: "None", value: null },
-    //   ],
-    // });
-    // if (auth) selectedAddons.push(auth as string);
+    const auth = await select({
+      message: "Choose an auth provider:",
+      options: [
+        ...addons.auth.map((a) => ({ label: a.name, value: a.value })),
+        { label: "None", value: null },
+      ],
+    });
+    if (auth) selectedAddons.push(auth as string);
 
     const frameworkName = selectedFramework.split("-")[0];
     await generateProject(
