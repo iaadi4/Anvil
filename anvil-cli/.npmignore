@@ -1,0 +1,42 @@
+# Source files
+src/
+bin/
+tsconfig.json
+tsup.config.ts
+
+# Development files
+*.log
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Build artifacts
+node_modules/
+*.tsbuildinfo
+
+# Git
+.git/
+.gitignore
+
+# Tests
+test/
+tests/
+*.test.ts
+*.test.js
+*.spec.ts
+*.spec.js
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.travis.yml
+
+# Documentation (keep README.md)
+docs/
+
+# Misc
+coverage/
+.nyc_output/

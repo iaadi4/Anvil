@@ -5,6 +5,7 @@ import {
   multiselect,
   text,
   isCancel,
+  cancel,
 } from "@clack/prompts";
 import { frameworks } from "./constants/frameworks";
 import { addons } from "./constants/addons";
@@ -17,43 +18,64 @@ const prefix = {
   step: chalk.yellowBright("[STEP]"),
   done: chalk.green("[DONE]"),
   warn: chalk.hex("#FFA500")("[WARN]"),
+  error: chalk.redBright("[ERROR]"),
+};
+
+const handleCancel = (value: unknown) => {
+  if (isCancel(value)) {
+    cancel("Operation cancelled.");
+    process.exit(0);
+  }
 };
 
 export async function cli() {
-  intro(chalk.bold.blue("Create Web Stack CLI"));
+  try {
+    intro(chalk.bold.blue("Create Anvil App"));
 
-  console.log(
-    `${prefix.input} Please enter a name for your project directory.\n`
-  );
+    const projectDir = await text({
+      message: "Enter a name for your project directory:",
+      placeholder: "my-app",
+      validate: (input) => {
+        if (!input) return "Project directory name is required.";
+        if (!/^[a-zA-Z0-9-_]+$/.test(input)) {
+          return "Project name can only contain letters, numbers, hyphens, and underscores.";
+        }
+      },
+    });
+    handleCancel(projectDir);
 
-  const projectDir = await text({
-    message: "Project directory name:",
-    placeholder: "my-app",
-    validate: (input) =>
-      input.trim() === "" ? "Project directory name is required." : undefined,
-  });
+    const packageManager = (await select({
+      message: "Select a package manager:",
+      options: [
+        { label: "pnpm", value: "pnpm" },
+        { label: "npm", value: "npm" },
+        { label: "yarn", value: "yarn" },
+      ],
+    })) as "pnpm" | "npm" | "yarn";
+    handleCancel(packageManager);
 
-  if (isCancel(projectDir)) {
-    outro(`${prefix.warn} Operation cancelled.`);
-    process.exit(0);
-  }
 
-  console.log(`\n${prefix.input} Select a framework:\n`);
+    const selectedFramework = await select({
+      message: "Select a framework:",
+      options: frameworks.map((f) => ({ label: f.name, value: f.value })),
+    });
+    handleCancel(selectedFramework);
 
-  const selectedFramework = await select({
-    message: "Framework:",
-    options: frameworks.map((f) => ({ label: f.name, value: f.value })),
-  });
+    const framework = selectedFramework as string;
+    const isTypescript = framework.includes("ts");
+    const isNext = framework.startsWith("next");
+    const selectedAddons: string[] = [];
 
-  if (isCancel(selectedFramework)) {
-    outro(`${prefix.warn} Operation cancelled.`);
-    process.exit(0);
-  }
+    const backend = await select({
+      message: "Add a backend?",
+      options: [
+        ...addons.backend.map((b) => ({ label: b.name, value: b.value })),
+        { label: "None", value: null },
+      ],
+    });
+    handleCancel(backend);
+    if (backend) selectedAddons.push(backend);
 
-  const isReact = selectedFramework.startsWith("react");
-  let selectedAddons: string[] = [];
-
-  if (isReact) {
     const tailwind = await select({
       message: "Include Tailwind CSS?",
       options: [
@@ -61,58 +83,71 @@ export async function cli() {
         { label: "No", value: null },
       ],
     });
-    if (tailwind) selectedAddons.push(tailwind as string);
+    handleCancel(tailwind);
+    if (tailwind) selectedAddons.push(tailwind);
 
-    const styleChoices = addons.styling.filter((a) => {
-      if (a.value === "shadcn") {
-        return (
-          selectedAddons.includes("tailwind") &&
-          selectedFramework.includes("ts")
-        );
-      }
-      if (a.value === "daisyui") {
-        return selectedAddons.includes("tailwind");
-      }
-      return a.value !== "tailwind";
+    const stylingOptions = addons.styling.filter((a) => {
+      const isTailwindDependent = ["shadcn", "daisyui"].includes(a.value);
+      if (a.value === "tailwind") return false; // Already handled
+      if (isTailwindDependent) return selectedAddons.includes("tailwind");
+      if (a.value === "nextui") return isNext;
+      return true;
     });
 
-    const style = await select({
-      message: "Choose a styling library:",
-      options: [
-        ...styleChoices.map((a) => ({ label: a.name, value: a.value })),
-        { label: "None", value: null },
-      ],
-    });
-    if (style) selectedAddons.push(style as string);
+    if (stylingOptions.length > 0) {
+      const style = await select({
+        message: "Choose a styling library:",
+        options: [
+          ...stylingOptions.map((s) => ({ label: s.name, value: s.value })),
+          { label: "None", value: null },
+        ],
+      });
+      handleCancel(style);
+      if (style) selectedAddons.push(style);
+    }
 
-    const auth = await select({
-      message: "Choose an auth provider:",
-      options: [
-        { label: "Clerk", value: "clerk" },
-        { label: "None", value: null },
-      ],
-    });
-    if (auth) selectedAddons.push(auth as string);
+    const ormOptions = addons.orm.filter((o) => isNext || o.value === "drizzle");
+    if (ormOptions.length > 0) {
+      const orm = await select({
+        message: "Choose an ORM:",
+        options: [
+          ...ormOptions.map((o) => ({ label: o.name, value: o.value })),
+          { label: "None", value: null },
+        ],
+      });
+      handleCancel(orm);
+      if (orm) selectedAddons.push(orm);
+    }
+
+    const authOptions = addons.auth.filter(
+      (a) => isNext || a.value === "clerk"
+    );
+    if (authOptions.length > 0) {
+      const auth = await select({
+        message: "Choose an auth provider:",
+        options: [
+          ...authOptions.map((a) => ({ label: a.name, value: a.value })),
+          { label: "None", value: null },
+        ],
+      });
+      handleCancel(auth);
+      if (auth) selectedAddons.push(auth);
+    }
 
     const extras = await multiselect({
       message: "Select additional tools:",
-      options: [
-        ...addons.extras.map((e) => ({ label: e.name, value: e.value })),
-        { label: "None", value: null },
-      ],
+      options: addons.extras.map((e) => ({ label: e.name, value: e.value })),
+      required: false,
     });
-
-    if (!isCancel(extras)) {
-      selectedAddons.push(
-        ...(extras.filter((e) => typeof e === "string") as string[])
-      );
-    }
+    handleCancel(extras);
+    if (extras) selectedAddons.push(...(extras as string[]));
 
     console.log("\n" + chalk.bold(`${prefix.info} Stack Summary:`));
     console.log(`${prefix.info} Project    :`, chalk.white(projectDir));
+    console.log(`${prefix.info} Framework  :`, chalk.white(framework));
     console.log(
-      `${prefix.info} Framework  :`,
-      chalk.white(selectedFramework)
+      `${prefix.info} Package Manager  :`,
+      chalk.white(packageManager)
     );
     console.log(
       `${prefix.info} Addons     :`,
@@ -122,84 +157,22 @@ export async function cli() {
     );
     console.log("");
 
-    const frameworkName = selectedFramework.split("-")[0];
+    const frameworkName = framework.split("-")[0];
     await generateProject(
       frameworkName,
-      selectedFramework,
+      framework,
       selectedAddons,
-      projectDir
+      projectDir,
+      packageManager
     );
+
+    outro(
+      `${prefix.done} Project successfully created at ./${projectDir}`
+    );
+  } catch (error) {
+    console.error(`\n${prefix.error} An unexpected error occurred:`, error);
+    outro(`${prefix.warn} Project creation failed.`);
+    process.exit(1);
   }
-
-  if (!isReact) {
-    let selectedAddons: string[] = [];
-
-    const packageManager = await select({
-      message: "Choose a package manager:",
-      options: [
-        ...addons.packageManager.map((pm) => ({
-          label: pm.name,
-          value: pm.value
-        }))
-      ]
-    });
-
-    if(isCancel(packageManager)) {
-      outro(`${prefix.warn} Operation cancelled.`);
-      process.exit(0);
-    }
-
-    const style = await select({
-      message: "Choose a styling library:",
-      options: [
-        { label: 'daisyui', value: 'daisyui' },
-        { label: 'shadcn', value: 'shadcn' },
-        { label: 'nextui', value: 'nextui' },
-        { label: 'none', value: null }
-      ],
-    });
-
-    if(isCancel(style)) {
-      outro(`${prefix.warn} Operation cancelled.`);
-      process.exit(0);
-    }
-
-    if (style) selectedAddons.push(style as string);
-
-    const orm = await select({
-      message: "Choose an ORM:",
-      options: [
-        { label: 'Prisma', value: 'prisma' },
-        { label: 'drizzle', value: 'drizzle' },
-        { label: 'none', value: null }
-      ],
-    });
-
-    if(isCancel(orm)) {
-      outro(`${prefix.warn} Operation cancelled.`);
-      process.exit(0);
-    }
-
-    if (orm) selectedAddons.push(orm as string);
-
-    const auth = await select({
-      message: "Choose an auth provider:",
-      options: [
-        ...addons.auth.map((a) => ({ label: a.name, value: a.value })),
-        { label: "None", value: null },
-      ],
-    });
-    if (auth) selectedAddons.push(auth as string);
-
-    const frameworkName = selectedFramework.split("-")[0];
-    await generateProject(
-        frameworkName,
-        selectedFramework,
-        selectedAddons,
-        projectDir,
-        undefined
-      );
-  }
-
-  outro(`${prefix.done} Project successfully created at ./${projectDir}`);
 }
+

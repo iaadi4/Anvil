@@ -1,22 +1,57 @@
 {
-  "name": "anvil",
+  "name": "create-anvil-app",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "A powerful CLI tool for rapidly bootstrapping modern web applications with best-in-class tooling and configurations",
+  "main": "dist/index.mjs",
+  "type": "module",
   "scripts": {
-    "build": "tsup bin/index.ts --format esm",
-    "create-anvil": "./dist/index.mjs"
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "create-anvil": "node ./dist/index.mjs",
+    "prepublishOnly": "pnpm build"
   },
   "bin": {
     "create-anvil": "./dist/index.mjs"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "files": [
+    "dist",
+    "templates",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "cli",
+    "create-app",
+    "boilerplate",
+    "scaffolding",
+    "react",
+    "nextjs",
+    "typescript",
+    "tailwind",
+    "shadcn",
+    "vite",
+    "web-development",
+    "starter-template"
+  ],
+  "author": "iaadi4",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iaadi4/anvil.git",
+    "directory": "anvil-cli"
+  },
+  "homepage": "https://github.com/iaadi4/anvil#readme",
+  "bugs": {
+    "url": "https://github.com/iaadi4/anvil/issues"
+  },
+  "license": "MIT",
   "packageManager": "pnpm@10.11.0",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "dependencies": {
     "@clack/prompts": "^0.11.0",
     "chalk": "^5.4.1",
+    "execa": "^9.6.1",
     "fs-extra": "^11.3.0",
     "ora": "^8.2.0",
     "postcss": "^8.5.4",

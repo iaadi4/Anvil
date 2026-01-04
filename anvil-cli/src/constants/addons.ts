@@ -1,25 +1,19 @@
 export const addons = {
   styling: [
-    { name: 'Tailwind CSS', value: 'tailwind', requires: [] },
-    { name: 'Shadcn UI', value: 'shadcn', requires: ['tailwind', 'typescript'] },
-    { name: 'DaisyUI', value: 'daisyui', requires: ['tailwind'] },
+    { name: "Tailwind CSS", value: "tailwind" },
+    { name: "Shadcn UI", value: "shadcn" },
+    { name: "DaisyUI", value: "daisyui" },
+    { name: "NextUI", value: "nextui" },
   ],
-  backend: [
-    { name: 'Express', value: 'express', requires: [] },
-  ],
+  backend: [{ name: "Express", value: "express" }],
   orm: [
-    { name: 'Prisma', value: 'prisma', requires: ['backend'] },
+    { name: "Prisma", value: "prisma" },
+    { name: "Drizzle", value: "drizzle" },
   ],
   auth: [
-    { name: 'NextAuth', value: 'next-auth', requires: ['orm'] },
-    { name: 'BetterAuth', value: 'better-auth', requires: ['orm'] },
+    { name: "Clerk", value: "clerk" },
+    { name: "NextAuth", value: "next-auth" },
+    { name: "BetterAuth", value: "better-auth" },
   ],
-  extras: [
-    { name: 'Docker', value: 'docker', requires: [] },
-  ],
-  packageManager: [
-    { name: 'npm', value: 'npm', requires: [] }, 
-    { name: 'yarn', value: 'yarn', requires: [] },
-    { name: 'pnpm', value: 'pnpm', requires: [] }
-  ]
+  extras: [{ name: "Docker", value: "docker" }],
 };
